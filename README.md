@@ -5,4 +5,4 @@
 ## Установка 
 1. ``` bash pip install -r requirements.txt ```
 2. ``` python app.py ```
-3. 127.0.0.1:5000//?user_id=Username
+3. 127.0.0.1:5000/?user_id=Username
