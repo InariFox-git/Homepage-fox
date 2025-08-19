@@ -7,6 +7,6 @@
 ![ScreenShot](/static/sc.jpg)
 
 ## Установка 
-1. ``` bash pip install -r requirements.txt ```
-2. ``` python app.py ```
-3. 127.0.0.1:5000/?user_id=Username
+1. ``` pip install -r requirements.txt ```
+2. ``` python3 app.py ```
+3. http://127.0.0.1:5000/?user_id=Username
