@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выбор пользователя</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Выберите пользователя</h1>
+        
+        <div class="user-selection">
+            <div id="usersList" class="users-grid"></div>
+            
+            <div class="add-user-form">
+                <h2>Или создайте нового</h2>
+                <input type="text" id="newUserId" placeholder="Введите новый ID">
+                <button onclick="createUser()">Создать</button>
+            </div>
+        </div>
+        
+        <div id="notification-container"></div>
+    </div>
+
+    <script>
+        const dataManager = {
+            showNotification: (message, type = 'info') => {
+                const container = document.getElementById('notification-container');
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                container.appendChild(notification);
+                setTimeout(() => {
+                    notification.style.animation = 'slideDown 0.3s ease-out reverse';
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }
+        };
+
+        async function loadUsers() {
+            try {
+                const res = await fetch('/get_users');
+                const users = await res.json();
+                renderUsers(users);
+            } catch (e) {
+                dataManager.showNotification('Ошибка загрузки пользователей', 'error');
+                console.error(e);
+            }
+        }
+
+        function renderUsers(users) {
+            const list = document.getElementById('usersList');
+            list.innerHTML = '';
+            
+            if (users.length === 0) {
+                list.innerHTML = '<p>Пользователи не найдены</p>';
+                return;
+            }
+            
+            users.forEach(userId => {
+                const userCard = document.createElement('div');
+                userCard.className = 'user-card';
+                userCard.innerHTML = `
+                    <span>${userId}</span>
+                    <button onclick="selectUser('${userId}')">Выбрать</button>
+                `;
+                list.appendChild(userCard);
+            });
+        }
+
+        function selectUser(userId) {
+            localStorage.setItem('current_user_id', userId);
+            window.location.href = `/?user_id=${userId}`;
+        }
+
+        async function createUser() {
+            const userId = document.getElementById('newUserId').value.trim();
+            if (!userId) {
+                dataManager.showNotification('Введите ID пользователя', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/add_user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: userId })
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Ошибка создания');
+                }
+                
+                dataManager.showNotification('Пользователь создан', 'success');
+                loadUsers();
+                document.getElementById('newUserId').value = '';
+            } catch (error) {
+                dataManager.showNotification(error.message, 'error');
+                console.error(error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadUsers);
+    </script>
+</body>
+</html>

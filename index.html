@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Стартовая страница</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+    <meta name="description" content="Персональная стартовая страница с закладками">
+    <meta name="theme-color" content="#1E1E2E">
+</head>
+<body>
+    <div class="container">
+        <!-- Логотип -->
+        <div class="logo">
+            <img src="/static/images/logo.png" alt="Logo">
+        </div>
+
+        <!-- Поисковая строка -->
+        <div class="search-bar">
+            <div class="search-input-wrapper">
+                <input type="text" id="searchInput" placeholder="Поиск в Яндекс" autocomplete="off">
+                <button class="clear-btn" onclick="clearSearch()" style="display: none;" aria-label="Очистить">×</button>
+            </div>
+            <button class="search-btn" onclick="searchYandex()" aria-label="Поиск">🔍</button>
+        </div>
+
+        <!-- Кнопка редактора -->
+        <button class="edit-btn" onclick="toggleEditor()" aria-label="Редактировать">Редактировать</button>
+
+        <!-- Модальное окно редактора -->
+        <div id="editorModal" class="modal" style="display: none;" data-test="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="toggleEditor()" aria-label="Закрыть">×</span>
+                <h3>Редактор папок</h3>
+                <div id="folderList" class="folder-list"></div>
+                <div class="editor-actions">
+                    <button class="add-folder-btn" onclick="addFolder()">Добавить папку</button>
+                    <button class="import-btn" onclick="importSettings()">Импорт</button>
+                    <button class="export-btn" onclick="exportSettings()">Экспорт</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Основной контейнер для папок -->
+        <div class="folders" id="folders"></div>
+        
+        <!-- Контейнер для уведомлений -->
+        <div id="notification-container"></div>
+    </div>
+
+    <script src="/static/js/script.js"></script>
+    <script>
+        // Закрытие модального окна при клике на фон
+        document.getElementById('editorModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                toggleEditor();
+            }
+        });
+
+        // Показ/скрытие кнопки очистки
+        const searchInput = document.getElementById('searchInput');
+        const clearBtn = document.querySelector('.clear-btn');
+        searchInput.addEventListener('input', function() {
+            clearBtn.style.display = this.value ? 'inline-block' : 'none';
+        });
+
+        // Поиск по нажатию Enter
+        searchInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                searchYandex();
+            }
+        });
+
+        // Закрытие модального окна по Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const modal = document.getElementById('editorModal');
+                if (modal.style.display !== 'none') {
+                    toggleEditor();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

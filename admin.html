@@ -1,0 +1,120 @@
+<!-- admin.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление пользователями</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Управление пользователями</h1>
+        
+        <div class="admin-panel">
+            <div class="add-user-form">
+                <input type="text" id="newUserId" placeholder="Новый ID пользователя">
+                <button onclick="addUser()">Добавить пользователя</button>
+            </div>
+            
+            <div class="users-list">
+                <h2>Список пользователей</h2>
+                <ul id="usersList"></ul>
+            </div>
+        </div>
+        
+        <a href="/select_user" class="back-link">← К выбору пользователя</a>
+        
+        <div id="notification-container"></div>
+    </div>
+
+    <script>
+        const dataManager = {
+            showNotification: (message, type = 'info') => {
+                const container = document.getElementById('notification-container');
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.textContent = message;
+                container.appendChild(notification);
+                setTimeout(() => {
+                    notification.style.animation = 'slideDown 0.3s ease-out reverse';
+                    setTimeout(() => notification.remove(), 300);
+                }, 3000);
+            }
+        };
+
+        async function loadUsers() {
+            try {
+                const res = await fetch('/get_users');
+                const users = await res.json();
+                renderUsers(users);
+            } catch (e) {
+                dataManager.showNotification('Ошибка загрузки пользователей', 'error');
+                console.error(e);
+            }
+        }
+
+        function renderUsers(users) {
+            const list = document.getElementById('usersList');
+            list.innerHTML = '';
+            
+            users.forEach(userId => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span>${userId}</span>
+                    <button onclick="deleteUser('${userId}')">Удалить</button>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        async function addUser() {
+            const userId = document.getElementById('newUserId').value.trim();
+            if (!userId) {
+                dataManager.showNotification('Введите ID пользователя', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/add_user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: userId })
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Ошибка добавления');
+                }
+                
+                document.getElementById('newUserId').value = '';
+                loadUsers();
+                dataManager.showNotification('Пользователь добавлен', 'success');
+            } catch (error) {
+                dataManager.showNotification(error.message, 'error');
+                console.error(error);
+            }
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm(`Удалить пользователя ${userId}?`)) return;
+            
+            try {
+                const response = await fetch(`/delete_user/${userId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (!response.ok) throw new Error('Ошибка удаления');
+                
+                loadUsers();
+                dataManager.showNotification('Пользователь удален', 'success');
+            } catch (error) {
+                dataManager.showNotification(error.message, 'error');
+                console.error(error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadUsers);
+    </script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+{
+  "Username": {
+    "folders": [
+      {
+        "name": "Маркетплейсы",
+        "tabs": [
+          {
+            "name": "Aliexpress",
+            "url": "https://aliexpress.ru"
+          },
+          {
+            "name": "Яндекс Маркет",
+            "url": "https://market.yandex.ru"
+          },
+          {
+            "name": "Ozon",
+            "url": "https://www.ozon.ru"
+          },
+          {
+            "name": "5POST",
+            "url": "https://fivepost.ru/clients-portal/orders"
+          },
+          {
+            "name": "Wildberries",
+            "url": "https://www.wildberries.ru/"
+          }
+        ]
+      },
+      {
+        "name": "Видео",
+        "tabs": [
+          {
+            "name": "YouTube",
+            "url": "https://www.youtube.com"
+          },
+          {
+            "name": "Twitch",
+            "url": "https://www.twitch.tv"
+          },
+          {
+            "name": "VK Play",
+            "url": "https://vkplay.live"
+          }
+        ]
+      },
+      {
+        "name": "Хранилища",
+        "tabs": [
+          {
+            "name": "Яндекс Диск",
+            "url": "https://disk.yandex.ru"
+          },
+          {
+            "name": "Google Drive",
+            "url": "https://drive.google.com/"
+          },
+          {
+            "name": "Mega.nz",
+            "url": "https://mega.nz"
+          },
+          {
+            "name": "Mediafire",
+            "url": "https://www.mediafire.com"
+          }
+        ]
+      },
+      {
+        "name": "Соцсети",
+        "tabs": [
+          {
+            "name": "ВКонтакте",
+            "url": "https://vk.com"
+          },
+          {
+            "name": "Сферум",
+            "url": "https://web.vk.me/"
+          },
+          {
+            "name": "К-Врачу",
+            "url": "https://k-vrachu.ru/"
+          },
+          {
+            "name": "X/Twitter",
+            "url": "https://x.com/"
+          }
+        ]
+      },
+      {
+        "name": "Почта",
+        "tabs": [
+          {
+            "name": "Mail.ru",
+            "url": "https://mail.ru/"
+          },
+          {
+            "name": "Gmail",
+            "url": "https://mail.google.com/"
+          },
+          {
+            "name": "Яндекс Почта",
+            "url": "https://mail.yandex.ru/"
+          }
+        ]
+      },
+      {
+        "name": "Разное",
+        "tabs": [
+          {
+            "name": "FontAwesome",
+            "url": "https://fontawesome.com"
+          },
+          {
+            "name": "Яндекс",
+            "url": "https://ya.ru"
+          },
+          {
+            "name": "Родительский контроль",
+            "url": "https://account.microsoft.com/family/settings"
+          },
+          {
+            "name": "Cloud.ru",
+            "url": "https://console.cloud.ru"
+          },
+          {
+            "name": "Cobalt",
+            "url": "https://cobalt.tools/"
+          }
+        ]
+      },
+      {
+        "name": "Аптека",
+        "tabs": [
+          {
+            "name": "Утека",
+            "url": "https://uteka.ru"
+          },
+          {
+            "name": "Планета Здоровья",
+            "url": "https://planetazdorovo.ru"
+          },
+          {
+            "name": "Аптека.ru",
+            "url": "https://apteka.ru"
+          }
+        ]
+      },
+      {
+        "name": "AI",
+        "tabs": [
+          {
+            "name": "Deep Seek",
+            "url": "https://chat.deepseek.com/"
+          },
+          {
+            "name": "Qwen",
+            "url": "https://chat.qwenlm.ai"
+          },
+          {
+            "name": "Duck.ai",
+            "url": "https://duck.ai"
+          },
+          {
+            "name": "ChatGPT",
+            "url": "https://chatgpt.com"
+          },
+          {
+            "name": "Firebase",
+            "url": "https://studio.firebase.google.com/"
+          }
+        ]
+      },
+      {
+        "name": "AI2",
+        "tabs": [
+          {
+            "name": "Grok",
+            "url": "https://grok.com/chat"
+          },
+          {
+            "name": "Kimi",
+            "url": "https://kimi.ai/"
+          },
+          {
+            "name": "Claude",
+            "url": "https://claude.ai/new"
+          }
+        ]
+      }
+    ]
+  }
+}
