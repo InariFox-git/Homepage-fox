@@ -107,21 +107,18 @@ function toggleEditor() {
 
 function setupTabDragAndDrop() {
     const tabItems = document.querySelectorAll('.tab-item');
-    
     tabItems.forEach(item => {
         item.addEventListener('dragstart', (e) => {
             e.dataTransfer.setData('text/plain', 
                 `${e.target.dataset.folderIndex},${e.target.dataset.tabIndex}`);
             e.target.classList.add('dragging');
         });
-
         item.addEventListener('dragend', (e) => {
             e.target.classList.remove('dragging');
         });
     });
 
     const folderItems = document.querySelectorAll('.folder-item');
-    
     folderItems.forEach(item => {
         item.addEventListener('dragover', (e) => {
             e.preventDefault();
@@ -134,6 +131,42 @@ function setupTabDragAndDrop() {
                     item.querySelector('.tabs-list').appendChild(draggingElement);
                 }
             }
+        });
+
+        // 🔥 Основное изменение: обработчик drop
+        item.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const draggingElement = document.querySelector('.dragging');
+            if (!draggingElement) return;
+
+            // Получаем исходные индексы
+            const [oldFolderIdxStr, oldTabIdxStr] = e.dataTransfer.getData('text/plain').split(',');
+            const oldFolderIdx = parseInt(oldFolderIdxStr);
+            const oldTabIdx = parseInt(oldTabIdxStr);
+
+            // Получаем целевые индексы
+            const newFolderIdx = parseInt(item.dataset.folderIndex);
+            const tabsList = item.querySelector('.tabs-list');
+            const newTabIndex = [...tabsList.children].indexOf(draggingElement);
+
+            // Убедимся, что индексы корректны
+            if (isNaN(oldFolderIdx) || isNaN(oldTabIdx) || isNaN(newFolderIdx) || newTabIndex === -1) return;
+
+            // Извлекаем вкладку из старого места
+            const movedTab = { ...folders[oldFolderIdx].tabs[oldTabIdx] };
+
+            // Удаляем из старой папки
+            folders[oldFolderIdx].tabs.splice(oldTabIdx, 1);
+
+            // Вставляем в новую папку
+            folders[newFolderIdx].tabs.splice(newTabIndex, 0, movedTab);
+
+            // 🔥 Сохраняем изменения!
+            save();
+
+            // Перерисовываем интерфейс
+            renderFolders();
+            renderEditor();
         });
     });
 }
@@ -191,17 +224,18 @@ function renderEditor() {
         const tabsHtml = folder.tabs.map((tab, tabIdx) => `
             <div class="tab-item" draggable="true" data-folder-index="${folderIdx}" data-tab-index="${tabIdx}">
                 <input type="text"
-                       id="tab-name-${folderIdx}-${tabIdx}"
-                       name="tab-name-${folderIdx}-${tabIdx}"
-                       value="${escapeHtml(tab.name)}"
-                       placeholder="Название вкладки"
-                       oninput="updateTabName(${folderIdx}, ${tabIdx}, this.value)">
-                <input type="text"
-                       id="tab-url-${folderIdx}-${tabIdx}"
-                       name="tab-url-${folderIdx}-${tabIdx}"
-                       value="${escapeHtml(tab.url)}"
-                       placeholder="URL вкладки"
-                       oninput="updateTabUrl(${folderIdx}, ${tabIdx}, this.value)">
+					   id="tab-name-${folderIdx}-${tabIdx}"
+					   name="tab-name-${folderIdx}-${tabIdx}"
+					   value="${escapeHtml(tab.name)}"
+					   placeholder="Название вкладки"
+					   onkeydown="handleTabFieldKeydown(event, ${folderIdx}, ${tabIdx}, 'name')">
+
+				<input type="text"
+					   id="tab-url-${folderIdx}-${tabIdx}"
+					   name="tab-url-${folderIdx}-${tabIdx}"
+					   value="${escapeHtml(tab.url)}"
+					   placeholder="URL вкладки"
+					   onkeydown="handleTabFieldKeydown(event, ${folderIdx}, ${tabIdx}, 'url')">
                 <button onclick="deleteTab(${folderIdx}, ${tabIdx})" title="Удалить вкладку">×</button>
             </div>
         `).join('');
@@ -266,6 +300,56 @@ function save() {
     localStorage.setItem(`folders_${userId}`, JSON.stringify(folders));
     clearTimeout(saveTimeout);
     saveTimeout = setTimeout(() => dataManager.saveWithQueue(folders, userId), 1000);
+}
+
+function deleteTab(folderIndex, tabIndex) {
+    if (confirm('Удалить вкладку?')) {
+        folders[folderIndex].tabs.splice(tabIndex, 1);
+        save();
+        renderFolders();
+        renderEditor();
+    }
+}
+
+function updateTabField(folderIdx, tabIdx, field, value) {
+    if (!folders[folderIdx] || !folders[folderIdx].tabs[tabIdx]) return;
+    const trimmed = value.trim();
+    if (trimmed) {
+        folders[folderIdx].tabs[tabIdx][field] = trimmed;
+        save();
+        renderFolders();
+        renderEditor();
+    }
+}
+
+function handleTabFieldKeydown(e, folderIdx, tabIdx, field) {
+    const input = e.target;
+    const originalValue = input.dataset.originalValue !== undefined ? 
+                          input.dataset.originalValue : 
+                          folders[folderIdx].tabs[tabIdx][field];
+
+    // Сохраняем оригинальное значение при первом фокусе
+    if (input.dataset.originalValue === undefined) {
+        input.dataset.originalValue = originalValue;
+    }
+
+    if (e.key === 'Enter') {
+        const newValue = input.value.trim();
+        if (newValue) {
+            folders[folderIdx].tabs[tabIdx][field] = newValue;
+            save();
+            renderFolders();
+            renderEditor();
+        } else {
+            // Если пусто — оставляем старое
+            input.value = originalValue;
+        }
+    }
+
+    if (e.key === 'Escape') {
+        input.value = originalValue; // восстанавливаем
+        input.blur(); // закрываем редактирование
+    }
 }
 
 function handleTabClick(event, url) {
