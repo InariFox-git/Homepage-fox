@@ -1,27 +1,13 @@
 # app.py
-from flask import Flask, jsonify, request, send_from_directory, redirect, render_template
+from flask import Flask, jsonify, request, send_from_directory, redirect
 from flask_cors import CORS
 import json
 import os
 from urllib.parse import urlparse
-from flask_talisman import Talisman
+
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
 CORS(app)
-
-# Настройка CSP
-csp = {
-    'default-src': "'self'",
-    'script-src': ["'self'", "'unsafe-inline'"],  # разрешаем inline JS
-    'style-src': ["'self'", "'unsafe-inline'"],   # разрешаем inline CSS
-    'img-src': ["'self'", "https:", "data:"],
-    'font-src': ["'self'"],
-    'object-src': "'none'",   # запрещаем <object>, <embed>
-    'base-uri': "'self'",
-    'form-action': "'self'"
-}
-
-Talisman(app, content_security_policy=csp)
 
 DATA_DIR = 'data'
 USERS_FILE = os.path.join(DATA_DIR, 'users.json')
@@ -148,3 +134,4 @@ def page_not_found(e):
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
+
