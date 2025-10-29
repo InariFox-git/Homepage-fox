@@ -1,0 +1,68 @@
+.add-user-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 2rem;
+}
+
+.add-user-form input {
+    flex-grow: 1;
+}
+
+.users-list {
+    text-align: left;
+}
+
+.users-list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.users-list li {
+    background-color: var(--input-bg);
+    padding: 15px 20px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.users-list li:hover {
+    background-color: var(--hover-bg);
+}
+
+.users-list span {
+    font-weight: 500;
+}
+
+.users-list button {
+    background-color: var(--red);
+    color: white;
+    font-size: 0.9rem;
+    padding: 8px 15px;
+}
+
+.users-list button:hover {
+    background-color: #ff6e87;
+    transform: none; /* Override common button hover */
+}
+
+.back-link {
+    margin-top: 2rem;
+    display: inline-block;
+    background-color: transparent;
+    color: var(--secondary-color);
+    text-decoration: none;
+    border: 1px solid var(--secondary-color);
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.back-link:hover {
+    background-color: var(--secondary-color);
+    color: var(--bg-color);
+    transform: none;
+}

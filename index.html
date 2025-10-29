@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Стартовая страница</title>
+    <link rel="stylesheet" href="/static/css/common.css?v=5">
+    <link rel="stylesheet" href="/static/css/index.css?v=5">
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+    <meta name="description" content="Персональная стартовая страница с закладками">
+    <meta name="theme-color" content="#1E1E2E">
+</head>
+<body>
+    <div class="container">
+        <!-- Логотип -->
+        <div class="logo">
+            <img src="/static/images/logo.png" alt="Logo">
+        </div>
+
+        <!-- Поисковая строка с переключателем -->
+        <div class="search-bar">
+            <div class="search-engine-select">
+                <select id="searchEngineSelect">
+                    <option value="yandex">Yandex</option>
+                    <option value="google">Google</option>
+                </select>
+            </div>
+            <div class="search-input-wrapper">
+                <input type="text" id="searchInput" placeholder="Поиск в Yandex" autocomplete="off">
+                <button class="clear-btn" onclick="clearSearch()" style="display: none;" aria-label="Очистить">×</button>
+            </div>
+            <button class="search-button" onclick="search()" aria-label="Поиск">🔍</button>
+        </div>
+
+        <!-- Кнопка редактора -->
+        <button class="edit-btn" onclick="toggleEditor()" aria-label="Редактировать">Редактировать</button>
+
+        <!-- Модальное окно редактора -->
+        <div id="editorModal" class="modal" style="display: none;" data-test="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="toggleEditor()" aria-label="Закрыть">×</span>
+                <h3>Редактор папок</h3>
+                <div id="folderList" class="folder-list"></div>
+                <div class="editor-actions">
+                    <button class="add-folder-btn" onclick="addFolder()">Добавить папку</button>
+                    <button class="import-btn" onclick="importSettings()">Импорт</button>
+                    <button class="export-btn" onclick="exportSettings()">Экспорт</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Основной контейнер для папок -->
+        <div class="folders" id="folders"></div>
+        
+        <!-- Контейнер для уведомлений -->
+        <div id="notification-container"></div>
+    </div>
+
+    <script src="/static/js/common.js?v=5"></script>
+    <script src="/static/js/index.js?v=5"></script>
+</body>
+</html>

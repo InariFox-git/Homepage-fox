@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление пользователями</title>
+    <link rel="stylesheet" href="/static/css/common.css?v=5">
+    <link rel="stylesheet" href="/static/css/admin.css?v=5">
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+    <meta name="theme-color" content="#1E1E2E">
+</head>
+<body>
+    <div class="centered-panel">
+        <h1>Управление пользователями</h1>
+        
+        <div class="add-user-form">
+            <input type="text" id="newUserId" placeholder="Новый ID пользователя">
+            <button onclick="addUser()">Добавить</button>
+        </div>
+        
+        <div class="users-list">
+            <h2>Список пользователей</h2>
+            <ul id="usersList"></ul>
+        </div>
+        
+        <a href="/select_user" class="back-link">← К выбору пользователя</a>
+        
+        <div id="notification-container"></div>
+    </div>
+
+    <script src="/static/js/common.js?v=5"></script>
+    <script src="/static/js/admin.js?v=5"></script>
+</body>
+</html>

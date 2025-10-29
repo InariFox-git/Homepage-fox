@@ -1,0 +1,52 @@
+.users-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+    max-height: 40vh;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.user-card {
+    background-color: var(--input-bg);
+    padding: 1.5rem 1rem;
+    border-radius: 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.user-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px var(--shadow-color);
+}
+
+.user-card span {
+    font-weight: 600;
+    font-size: 1.1rem;
+    word-break: break-all;
+}
+
+.add-user-form--column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    margin-top: 2rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 2rem;
+}
+
+.add-user-form--column input {
+    max-width: 300px;
+    text-align: center;
+}
+
+.add-user-form--column h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}

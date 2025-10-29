@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выбор пользователя</title>
+    <link rel="stylesheet" href="/static/css/common.css?v=5">
+    <link rel="stylesheet" href="/static/css/select_user.css?v=5">
+    <link rel="icon" type="image/png" href="/static/favicon.png">
+    <meta name="theme-color" content="#1E1E2E">
+</head>
+<body>
+    <div class="centered-panel">
+        <h1>Выбор пользователя</h1>
+        <div id="usersGrid" class="users-grid"></div>
+        <div class="add-user-form add-user-form--column">
+            <h2>Создать нового пользователя</h2>
+            <input type="text" id="newUserId" placeholder="Введите ID пользователя">
+            <button onclick="createUser()">Создать</button>
+        </div>
+        <div id="notification-container"></div>
+    </div>
+
+    <script src="/static/js/common.js?v=5"></script>
+    <script src="/static/js/select_user.js?v=5"></script>
+</body>
+</html>
