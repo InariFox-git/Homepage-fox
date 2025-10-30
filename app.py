@@ -51,7 +51,11 @@ def serve_index():
     return send_from_directory('.', 'index.html')
 
 @app.route('/admin')
-def serve_admin():
+def check_request_ip():
+    from flask import request, abort
+    ip = request.remote_addr
+    if not ip.startswith('192.168.31.*'):
+        return 'Доступ запрещён: только для локальной сети.', 403
     return send_from_directory('.', 'admin.html')
 
 @app.route('/static/<path:path>')
