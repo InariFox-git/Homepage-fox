@@ -1,0 +1,967 @@
+:root {
+    --base: #1E1E2E;
+    --surface0: #313244;
+    --surface1: #45475A;
+    --surface2: #585B70;
+    --text: #CDD6F4;
+    --subtext0: #A6ADC8;
+    --subtext1: #BAC2DE;
+    --blue: #89B4FA;
+    --sapphire: #74C7EC;
+    --mauve: #CBA6F7;
+    --lavender: #B4BEFE;
+    --green: #A6E3A1;
+    --teal: #94E2D5;
+    --red: #F38BA8;
+    --maroon: #EBA0AC;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    
+    /* 🔹 Фоновое изображение */
+    background-image: url('/static/images/bg/background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    
+    /* 🔹 Фолбэк-цвет, если картинка не загрузится */
+    background-color: var(--base);
+    
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    line-height: 1.6;
+}
+
+.container {
+    text-align: center;
+    width: 90%;
+    max-width: 1200px;
+    position: relative;
+    padding: 20px;
+}
+
+/* Логотип и поисковая строка */
+.logo, .search-bar {
+    position: relative;
+    opacity: 1;
+    transform: none;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Отступ между переключателем, строкой поиска и кнопкой */
+    margin-bottom: 20px;
+}
+
+.logo {
+    margin-bottom: 20px;
+}
+
+.logo img {
+    max-width: 150px;
+    height: auto;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.search-bar {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.search-input-wrapper {
+    position: relative;
+    width: 450px;
+    max-width: 100%;
+}
+
+.search-input-wrapper input {
+    padding: 12px 40px 12px 15px;
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--surface0);
+    color: var(--text);
+    font-size: 16px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-input-wrapper input:focus {
+    background-color: var(--surface1);
+    outline: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.search-input-wrapper .clear-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--subtext0);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0 8px;
+    transition: color 0.2s ease;
+}
+
+.search-input-wrapper .clear-btn:hover {
+    color: var(--text);
+}
+
+.edit-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: var(--mauve);
+    color: var(--base);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    opacity: 0;
+    animation: fadeIn 0.25s ease-out forwards;
+    animation-delay: 0.5s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+.edit-btn:hover {
+    background-color: var(--lavender);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.folders {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.folder {
+    background-color: var(--surface0);
+    padding: 15px;
+    border-radius: 12px;
+    width: 200px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.folder:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    border-color: var(--surface1);
+}
+
+.folder > div {
+    padding: 5px;
+    margin-bottom: 0px;
+}
+
+.folder-name {
+    color: var(--blue);
+    font-size: 18px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--surface1);
+    padding-bottom: 0px;
+    display: inline-block;
+    margin-bottom: 0px;
+}
+
+.tab {
+    margin: 8px 0;
+    padding: 8px 12px;
+    color: var(--text);
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: var(--surface1);
+    transition: all 0.2s ease;
+    font-size: 14px;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.tab::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.tab:hover {
+    background-color: var(--surface2);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.tab:hover::before {
+    left: 100%;
+}
+
+.tab[data-url]::after {
+    content: attr(data-url);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--base);
+    color: var(--text);
+    padding: 8px 12px;
+    border-radius: 6px;
+    white-space: nowrap;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    font-size: 12px;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tab:hover[data-url]::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-5px);
+}
+
+/* Стили для модального окна */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background-color: var(--base);
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
+    animation: slideIn 0.15s ease-out;
+    border: 1px solid var(--surface1);
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    color: var(--red);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.close-btn:hover {
+    color: var(--maroon);
+    background-color: var(--surface0);
+    transform: rotate(90deg);
+}
+
+.modal h3 {
+    margin: 0 0 25px 0;
+    text-align: center;
+    font-size: 24px;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.folder-list {
+    max-height: 50vh;
+    overflow-y: auto;
+    padding-right: 10px;
+    min-height: 100px;
+}
+
+.folder-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.folder-list::-webkit-scrollbar-track {
+    background: var(--base);
+    border-radius: 10px;
+}
+
+.folder-list::-webkit-scrollbar-thumb {
+    background: var(--mauve);
+    border-radius: 10px;
+}
+
+.folder-list::-webkit-scrollbar-thumb:hover {
+    background: var(--lavender);
+}
+
+.folder-item {
+    background-color: var(--surface0);
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.folder-item.drag-over {
+    border: 2px dashed var(--green);
+    background-color: var(--surface1);
+    transform: scale(1.02);
+}
+
+.folder-item .move-buttons {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 5px;
+}
+
+.folder-item .move-buttons button {
+    background-color: var(--green);
+    border: none;
+    border-radius: 4px;
+    padding: 6px 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--base);
+    transition: all 0.2s ease;
+}
+
+.folder-item .move-buttons button:hover:not(:disabled) {
+    background-color: var(--teal);
+    transform: scale(1.1);
+}
+
+.folder-item .move-buttons button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.folder-item input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--surface1);
+    color: var(--text);
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.folder-item input:focus {
+    background-color: var(--surface2);
+    outline: none;
+    box-shadow: 0 0 0 2px var(--blue);
+}
+
+.tab-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 6px;
+    background-color: var(--surface1);
+    cursor: move;
+    transition: all 0.2s ease;
+}
+
+.tab-item:hover {
+    background-color: var(--surface2);
+}
+
+.tab-item.dragging {
+    opacity: 0.5;
+    background-color: var(--surface2);
+    transform: scale(0.95);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.tab-item.drag-over {
+    border-top: 2px solid var(--green);
+}
+
+.tab-item input {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--surface0);
+    color: var(--text);
+    font-size: 14px;
+}
+
+.tab-item input:focus {
+    background-color: var(--base);
+    outline: none;
+    box-shadow: 0 0 0 2px var(--blue);
+}
+
+.tab-item button {
+    padding: 6px 12px;
+    background-color: var(--red);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--base);
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+.tab-item button:hover {
+    background-color: var(--maroon);
+    transform: scale(1.05);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.action-buttons button {
+    flex: 1;
+    padding: 10px;
+    background-color: var(--green);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--base);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.action-buttons button:hover {
+    background-color: var(--teal);
+    transform: translateY(-1px);
+}
+
+.editor-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.add-folder-btn, .import-btn, .export-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.add-folder-btn {
+    background-color: var(--green);
+    color: var(--base);
+}
+
+.import-btn {
+    background-color: var(--sapphire);
+    color: var(--base);
+}
+
+.export-btn {
+    background-color: var(--mauve);
+    color: var(--base);
+}
+
+.add-folder-btn:hover, .import-btn:hover, .export-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Уведомления */
+.notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 24px;
+    border-radius: 8px;
+    color: var(--base);
+    font-weight: 500;
+    z-index: 1001;
+    animation: slideDown 0.3s ease-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.notification.success {
+    background-color: var(--green);
+}
+
+.notification.error {
+    background-color: var(--red);
+}
+
+.notification.info {
+    background-color: var(--sapphire);
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 10px;
+    }
+    
+    .folder {
+        width: calc(50% - 10px);
+        min-width: 150px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        padding: 20px;
+    }
+    
+    .folder-item {
+        padding: 15px;
+    }
+    
+    .tab-item {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .tab-item input {
+        width: 100%;
+    }
+    
+    .search-bar {
+        flex-direction: column;
+    }
+    
+    .search-input-wrapper {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .folder {
+        width: 100%;
+    }
+    
+    .edit-btn {
+        position: relative;
+        top: auto;
+        right: auto;
+        margin: 20px 0;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideDown {
+    from { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+
+.admin-panel {
+    background-color: var(--surface0);
+    padding: 20px;
+    border-radius: 12px;
+    margin: 20px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.add-user-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.add-user-form input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--surface1);
+    color: var(--text);
+}
+
+.add-user-form button {
+    padding: 10px 20px;
+    background-color: var(--green);
+    border: none;
+    border-radius: 6px;
+    color: var(--base);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-user-form button:hover {
+    background-color: var(--teal);
+}
+
+.users-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.users-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: var(--surface1);
+    margin-bottom: 8px;
+    border-radius: 6px;
+}
+
+.users-list li button {
+    padding: 6px 12px;
+    background-color: var(--red);
+    border: none;
+    border-radius: 4px;
+    color: var(--base);
+    cursor: pointer;
+}
+
+.users-list li button:hover {
+    background-color: var(--maroon);
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--blue);
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* Стили для страницы выбора пользователя */
+.user-selection {
+    background-color: var(--surface0);
+    padding: 20px;
+    border-radius: 12px;
+    margin: 20px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.users-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.user-card {
+    background-color: var(--surface1);
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-card button {
+    padding: 8px 16px;
+    background-color: var(--blue);
+    border: none;
+    border-radius: 6px;
+    color: var(--base);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.user-card button:hover {
+    background-color: var(--sapphire);
+}
+
+.add-user-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.add-user-form input {
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--surface1);
+    color: var(--text);
+}
+
+.add-user-form button {
+    padding: 10px;
+    background-color: var(--green);
+    border: none;
+    border-radius: 6px;
+    color: var(--base);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-user-form button:hover {
+    background-color: var(--teal);
+}
+
+/* Общие стили ссылок */
+.home-link {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: var(--blue);
+    color: var(--base);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.home-link:hover {
+    background-color: var(--sapphire);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Стили для страницы выбора пользователя */
+.user-selection {
+    background-color: var(--surface0);
+    padding: 20px;
+    border-radius: 12px;
+    margin: 20px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.users-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.user-card {
+    background-color: var(--surface1);
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-card button {
+    padding: 8px 16px;
+    background-color: var(--blue);
+    border: none;
+    border-radius: 6px;
+    color: var(--base);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.user-card button:hover {
+    background-color: var(--sapphire);
+}
+
+.add-user-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.add-user-form h2 {
+    margin: 10px 0 5px 0;
+    font-size: 18px;
+    color: var(--subtext1);
+}
+
+.add-user-form input {
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--surface1);
+    color: var(--text);
+}
+
+.add-user-form button {
+    padding: 10px;
+    background-color: var(--green);
+    border: none;
+    border-radius: 6px;
+    color: var(--base);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-user-form button:hover {
+    background-color: var(--teal);
+}
+
+/* Обновленные стили для 404 */
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.home-link {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: var(--blue);
+    color: var(--base);
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.home-link:hover {
+    background-color: var(--sapphire);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.tab-item.dragging {
+    opacity: 0.5;
+    background-color: var(--surface2);
+}
+
+.tab-item.drag-over {
+    border-top: 2px solid var(--green);
+}
+
+.move-buttons {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 5px;
+}
+
+.move-buttons button {
+    background-color: var(--green);
+    border: none;
+    border-radius: 4px;
+    padding: 6px 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--base);
+    transition: all 0.2s ease;
+}
+
+.move-buttons button:hover:not(:disabled) {
+    background-color: var(--teal);
+    transform: scale(1.1);
+}
+
+.move-buttons button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.search-engine-select {
+    flex-shrink: 0; /* Предотвращает сжатие селекта */
+}
+
+.search-engine-select select {
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color, #02020200);
+    background-color: var(--input-bg, #2A2A3C);
+    color: var(--text-color, #ffffff);
+    cursor: pointer;
+}
+
+.search-input-wrapper {
+    flex-grow: 0; /* Строка поиска занимает оставшееся пространство */
+    position: relative;
+}
+
+.search-input-wrapper input {
+    width: 100%;
+    padding: 8px 30px 8px 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color, #02020200);
+    background-color: var(--input-bg, #2A2A3C);
+    color: var(--text-color, #ffffff);
+}
+
+.search-btn {
+    padding: 8px 12px;
+    font-size: 16px;
+    border-radius: 4px;
+    border: none;
+    background-color: var(--button-bg, #3A3A4C);
+    color: var(--text-color, #ffffff);
+    cursor: pointer;
+}
+
+.clear-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-color, #ffffff);
+    font-size: 16px;
+    cursor: pointer;
+}

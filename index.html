@@ -4,17 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Стартовая страница</title>
-    <link rel="stylesheet" href="/static/css/common.css?v=5">
+    <link rel="stylesheet" href="/static/css/common.css?v=6">
     <link rel="stylesheet" href="/static/css/index.css?v=5">
     <link rel="icon" type="image/png" href="/static/favicon.png">
     <meta name="description" content="Персональная стартовая страница с закладками">
     <meta name="theme-color" content="#1E1E2E">
+    <style>
+        html, body {
+            margin: 0;
+            background-color: #1A1B26;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <!-- Логотип -->
         <div class="logo">
-            <img src="/static/images/logo.png" alt="Logo">
+            <img id="userLogo" src="/static/images/logo.png" alt="Logo">
         </div>
 
         <!-- Поисковая строка с переключателем -->
@@ -40,6 +46,20 @@
             <div class="modal-content">
                 <span class="close-btn" onclick="toggleEditor()" aria-label="Закрыть">×</span>
                 <h3>Редактор папок</h3>
+                <div class="background-editor">
+                    <h4>Фон страницы</h4>
+                    <div class="background-preview-wrap">
+                        <img id="backgroundPreview" src="/static/images/bg/background.jpg" alt="Текущий фон">
+                    </div>
+                    <div id="backgroundGallery" class="background-gallery"></div>
+                    <div class="background-controls">
+                        <input id="backgroundInput" type="text" placeholder="Фон: /static/images/bg/background.jpg или https://...">
+                        <button class="import-btn" onclick="updateBackground()">Применить URL</button>
+                        <input id="backgroundFileInput" type="file" accept="image/*" style="display: none;">
+                        <button class="add-folder-btn" onclick="uploadBackgroundFromInput()">Загрузить файл</button>
+                        <button class="export-btn" onclick="resetBackground()">Фон по умолчанию</button>
+                    </div>
+                </div>
                 <div id="folderList" class="folder-list"></div>
                 <div class="editor-actions">
                     <button class="add-folder-btn" onclick="addFolder()">Добавить папку</button>

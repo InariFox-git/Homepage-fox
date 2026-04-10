@@ -18,16 +18,17 @@
 }
 
 body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    font-family: var(--font-family);
     margin: 0;
-    padding: 20px;
+    padding: 0;
+    
+    background-color: #1E1E2E;
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     min-height: 100vh;
-    box-sizing: border-box;
+    line-height: 1.6;
 }
 
 .centered-panel {

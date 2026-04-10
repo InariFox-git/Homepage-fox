@@ -1,5 +1,8 @@
 let folders = [];
 let searchEngine = 'yandex';
+const defaultBackground = '/static/images/bg/background.svg';
+let backgroundImage = defaultBackground;
+let galleryBackgrounds = [];
 let saveTimeout = null;
 let saveQueue = Promise.resolve();
 const minSaveInterval = 1000;
@@ -37,6 +40,82 @@ function escapeHtml(unsafe) {
         .replace(/'/g, "&#039;");
 }
 
+function applyBackground(background) {
+    document.body.style.backgroundImage = `url("${background}")`;
+    const preview = document.getElementById('backgroundPreview');
+    if (preview) {
+        preview.src = background;
+    }
+    highlightSelectedBackground(background);
+}
+
+function normalizeBackground(value) {
+    const fallback = defaultBackground;
+    if (typeof value !== 'string') return fallback;
+
+    const trimmed = value.trim();
+    if (!trimmed) return fallback;
+
+    if (trimmed.startsWith('/static/') || trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+        return trimmed;
+    }
+
+    return fallback;
+}
+
+function renderBackgroundGallery() {
+    const gallery = document.getElementById('backgroundGallery');
+    if (!gallery) return;
+
+    gallery.innerHTML = '';
+    galleryBackgrounds.forEach((bg) => {
+        const button = document.createElement('button');
+        button.className = 'background-thumb';
+        button.type = 'button';
+        button.title = `Выбрать ${bg}`;
+        button.onclick = () => selectGalleryBackground(bg);
+        button.innerHTML = `<img src="${bg}" alt="Фон">`;
+        button.dataset.background = bg;
+        gallery.appendChild(button);
+    });
+
+    highlightSelectedBackground(backgroundImage);
+}
+
+async function loadBackgroundOptions() {
+    try {
+        const response = await fetch('/background_options');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        if (Array.isArray(data.backgrounds) && data.backgrounds.length) {
+            galleryBackgrounds = data.backgrounds;
+        } else {
+            galleryBackgrounds = [defaultBackground];
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки галереи фонов:', error);
+        galleryBackgrounds = [defaultBackground];
+    }
+}
+
+function highlightSelectedBackground(background) {
+    const thumbs = document.querySelectorAll('.background-thumb');
+    thumbs.forEach((thumb) => {
+        thumb.classList.toggle('selected', thumb.dataset.background === background);
+    });
+}
+
+function selectGalleryBackground(background) {
+    backgroundImage = normalizeBackground(background);
+    const input = document.getElementById('backgroundInput');
+    if (input) {
+        input.value = backgroundImage;
+    }
+    applyBackground(backgroundImage);
+    save();
+    showNotification('Фон обновлен', 'success');
+}
+
 async function loadFolders() {
     const urlParams = new URLSearchParams(window.location.search);
     let userId = urlParams.get('user_id');
@@ -56,12 +135,25 @@ async function loadFolders() {
         const data = await res.json();
         folders = data.folders || [];
         searchEngine = data.search_engine || 'yandex';
+        backgroundImage = normalizeBackground(data.background);
+        applyBackground(backgroundImage);
+        
+        const userLogo = document.getElementById('userLogo');
+        if (data.logo) {
+            userLogo.src = data.logo;
+        } else {
+            userLogo.src = '/static/images/logo-fallback.png';
+        }
+
         localStorage.setItem(`data_${userId}`, JSON.stringify(data));
     } catch (e) {
         console.log('Error loading data:', e);
         folders = [];
         searchEngine = 'yandex';
-        localStorage.setItem(`data_${userId}`, JSON.stringify({folders, search_engine: searchEngine}));
+        backgroundImage = defaultBackground;
+        applyBackground(backgroundImage);
+        localStorage.setItem(`data_${userId}`, JSON.stringify({folders, search_engine: searchEngine, background: backgroundImage}));
+        document.getElementById('userLogo').src = '/static/images/logo-fallback.png';
     }
     
     const select = document.getElementById('searchEngineSelect');
@@ -186,6 +278,11 @@ function moveFolderDown(index) {
 function renderEditor() {
     const folderList = document.getElementById('folderList');
     folderList.innerHTML = '';
+    const backgroundInput = document.getElementById('backgroundInput');
+    if (backgroundInput) {
+        backgroundInput.value = backgroundImage;
+    }
+    renderBackgroundGallery();
 
     folders.forEach((folder, folderIdx) => {
         const folderDiv = document.createElement('div');
@@ -232,6 +329,80 @@ function renderEditor() {
     setTimeout(() => {
         setupTabDragAndDrop();
     }, 0);
+}
+
+function updateBackground() {
+    const input = document.getElementById('backgroundInput');
+    if (!input) return;
+
+    const newBackground = normalizeBackground(input.value);
+    backgroundImage = newBackground;
+    input.value = backgroundImage;
+    applyBackground(backgroundImage);
+    save();
+    showNotification('Фон обновлен', 'success');
+}
+
+async function uploadBackgroundFromInput() {
+    const fileInput = document.getElementById('backgroundFileInput');
+    if (!fileInput) return;
+
+    fileInput.onchange = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+            showNotification('Нужен файл изображения', 'error');
+            return;
+        }
+
+        const userId = localStorage.getItem('current_user_id');
+        if (!userId) {
+            showNotification('Сначала выберите пользователя', 'error');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('background', file);
+
+        try {
+            const response = await fetch(`/upload_background/${userId}`, {
+                method: 'POST',
+                body: formData
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+
+            const result = await response.json();
+            backgroundImage = normalizeBackground(result.background);
+            applyBackground(backgroundImage);
+            const input = document.getElementById('backgroundInput');
+            if (input) {
+                input.value = backgroundImage;
+            }
+            save();
+            showNotification('Фон загружен', 'success');
+        } catch (error) {
+            console.error('Ошибка загрузки фона:', error);
+            showNotification('Не удалось загрузить фон', 'error');
+        } finally {
+            fileInput.value = '';
+        }
+    };
+
+    fileInput.click();
+}
+
+function resetBackground() {
+    backgroundImage = defaultBackground;
+    applyBackground(backgroundImage);
+    const input = document.getElementById('backgroundInput');
+    if (input) {
+        input.value = backgroundImage;
+    }
+    save();
+    showNotification('Возвращен фон по умолчанию', 'success');
 }
 
 function updateFolderName(folderIndex, newName) {
@@ -295,7 +466,17 @@ function save() {
     const userId = localStorage.getItem('current_user_id');
     if (!userId) return;
     
-    const userData = { folders, search_engine: searchEngine };
+    let userData = {};
+    try {
+        userData = JSON.parse(localStorage.getItem(`data_${userId}`)) || {};
+    } catch (e) {
+        console.error("Error parsing user data from local storage", e);
+    }
+
+    userData.folders = folders;
+    userData.search_engine = searchEngine;
+    userData.background = backgroundImage;
+
     localStorage.setItem(`data_${userId}`, JSON.stringify(userData));
     clearTimeout(saveTimeout);
     saveTimeout = setTimeout(() => saveWithQueue(userData, userId), 1000);
@@ -373,7 +554,10 @@ function importSettings() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadFolders();
+    loadBackgroundOptions().then(() => {
+        renderBackgroundGallery();
+        loadFolders();
+    });
 
     document.getElementById('editorModal').addEventListener('click', function(event) {
         if (event.target === this) {
